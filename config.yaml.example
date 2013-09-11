@@ -5,6 +5,7 @@ svn_root: /www/svn/
 git_root: /www/git/
 logfile: /tmp/log
 errorlog: /tmp/log2
+basedir: /tmp
 
 gitolite:
   host: db.example.org
