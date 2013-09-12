@@ -53,6 +53,7 @@ $dbh->disconnect;
 #Commit and push changes
 chdir $config->{'basedir'};
 if ( `git diff` ne "" ) {
-    system("git commit -a -m \"Commit through update-gitolite.pl\"");
+    system("git add -A");
+    system("git commit -m \"Commit through update-gitolite.pl\"");
     system("git push");
 }
