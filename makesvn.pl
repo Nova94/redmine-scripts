@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 
 #
-# Make any pending svn repositories, or delete any that need deliting
+# Make any pending svn repositories, or delete any that need deleting
 #
 
 use strict;

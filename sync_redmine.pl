@@ -35,7 +35,7 @@ sub assocRepository {
   my $url        = repopath($repotype, $identifier);
   my $root_url   = repopath($repotype, $identifier);
 
-  if ( checkRepo($projectId, $identifier) == 0 and ( repoExhist($root_url) == 0 ) )
+  if ( checkRepo($projectId, $identifier) == 0 and ( repoExist($root_url) == 0 ) )
   {
     my $update_sql = "insert into repositories (url, root_url, type, project_id, identifier) VALUES (?, ?, ?, ?, ?)";
     if (defined $projectId) {
@@ -47,21 +47,16 @@ sub assocRepository {
       errorlog('assocRepository()', "Null value $identifier");
     }
   }
-  else
-  {
-    # nothing to do
-  }
-
 }
 
-sub repoExhist {
+sub repoExist {
   my ($root_url) = @_;
 
   if ( -d $root_url) {
     return 0;
   }
   else {
-    errorlog('repoExhist()', "Repository does not exhist on disk, $root_url dir not found");
+    errorlog('repoExist()', "Repository does not exist on disk, $root_url dir not found");
     return 1;
   }
 
@@ -85,7 +80,7 @@ sub checkRepo {
   }
 }
 
-# FIXME: Project ID should avalible in the database rather than looking it up
+# FIXME: Project ID should be available in the database rather than looking it up
 # to support multiple repositories
 sub getProjectId {
   my ($identifier) = @_;
