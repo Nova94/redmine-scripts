@@ -14,10 +14,10 @@ my $config = LoadFile('config.yaml');
 my $dbh = connectToDb('gitolite');
 my $dbh_redmine = connectToDb('redmine');
 
-my $sql = "select * from projects where status='pending' and type != 'none'";
+my $sql = "select * from projects where status=? and type !=?";
 my $sth = $dbh->prepare($sql);
 
-$sth->execute or die "SQL Error: $DBI::errstr\n";
+$sth->execute('pending', 'none') or die "SQL Error: $DBI::errstr\n";
 
 while ( my $row = $sth->fetchrow_hashref )
     {

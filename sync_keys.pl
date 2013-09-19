@@ -60,7 +60,7 @@ sub isDeleting {
     print "[ $time ] DELETING: $file\n";
     $file = $file =~ s/ /\\ /;
     `rm $row->{'name'}`;
-    $dbh->prepare($delSql)->execute($row->{'name'});
+    $dbh->prepare($delSql)->execute($row->{'name'}) or die "SQL Error: $DBI::errstr\n";
 }
 
 # Add the key to the keyfolder
@@ -73,5 +73,5 @@ sub isPending {
     my $file_handle = $file->openw();
     print "[ $time ] CREATING: $file\n";
     $file_handle->print( $row->{'keydata'} . "\n" );
-    $dbh->prepare($statePen)->execute($row->{'name'});
+    $dbh->prepare($statePen)->execute($row->{'name'}) or die "SQL Error: $DBI::errstr\n";
 }
