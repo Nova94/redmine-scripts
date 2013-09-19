@@ -7,9 +7,10 @@ use warnings;
 
 my $dbh = cat::db::connectToDb('gitolite');
 
-my $sql_count = "select count(*) from keys where state='pending';";
+
+my $sql_count = "select count(*) from keys where state=?;";
 my $sth_count = $dbh->prepare($sql_count);
-$sth_count->execute or die "SQL Error: $DBI::errstr\n";
+$sth_count->execute('pending') or die "SQL Error: $DBI::errstr\n";
 my $count_hash = $sth_count->fetchrow_hashref;
 
 if ( $count_hash->{'count'} > 1 )
