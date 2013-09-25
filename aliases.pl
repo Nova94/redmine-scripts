@@ -4,10 +4,13 @@ use cat::db;
 
 use strict;
 use warnings;
+use Path::Class;
 use YAML qw(LoadFile);
 
 my $config = LoadFile('config.yaml');
-my $default_key = $config->{'default_key'};
+my $default_key_file_path = $config->{'default_key'};
+my $default_key_file = file($default_key_file_path);
+my $default_key = $default_key_file->slurp(chomp => 1);
 
 my $dbh = cat::db::connectToDb('gitolite');
 
@@ -16,8 +19,6 @@ my $sql_count = "select count(*) from keys where state=?;";
 my $sth_count = $dbh->prepare($sql_count);
 $sth_count->execute('pending') or die "SQL Error: $DBI::errstr\n";
 my $count_hash = $sth_count->fetchrow_hashref;
-print $count_hash->{'count'};
-print "\n";
 
 if ( $count_hash->{'count'} > 0 )
     {
