@@ -18,7 +18,7 @@ $sth_count->execute or die "SQL Error: $DBI::errstr\n";
 my $count_hash = $sth_count->fetchrow_hashref;
 
 if ( $count_hash->{'count'} > 0 ) {
-    system ("./gitolite-redmine.pl > " . $config->{'basedir'} . "/conf/projects.conf");
+    system ("./gitolite-redmine.pl > " . $config->{'gitolite_admin_path'} . "/conf/projects.conf");
 }
 
 $sth_count->fetchrow_hashref;
@@ -31,7 +31,7 @@ $sth_count->execute or die "SQL Error: $DBI::errstr\n";
 $count_hash = $sth_count->fetchrow_hashref;
 
 if ( $count_hash->{'count'} > 0 ) {
-    system("./aliases.pl > " . $config->{'basedir'} . "/conf/aliases.pl");
+    system("./aliases.pl > " . $config->{'gitolite_admin_path'} . "/conf/aliases.pl");
 }
 
 $sth_count->fetchrow_hashref;
@@ -39,7 +39,7 @@ $sth_count->fetchrow_hashref;
 
 #Do some other stuff
 system("./makesvn.pl");
-system("./sync_keys.pl " . $config->{'basedir'} . "/keydir");
+system("./sync_keys.pl " . $config->{'gitolite_admin_path'} . "/keydir");
 system("./sync_redmine.pl");
 
 
@@ -51,7 +51,7 @@ $dbh->disconnect;
 
 
 #Commit and push changes
-chdir $config->{'basedir'};
+chdir $config->{'gitolite_admin_path'};
 if ( `git status` !~ /nothing to commit/ ) {
     system("git add -A");
     system("git commit -m \"Commit through update-gitolite.pl\"");
