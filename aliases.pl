@@ -35,9 +35,9 @@ if ( $count_hash->{'count'} > 0 )
 
         if ($keydata !~ /ssh-rsa/ && $keydata !~ /ssh-dsa/)
             {
-            my $sql_update = "update keys set keydata = '" . $default_key . "' where uid = '" . $uid . "'";
+            my $sql_update = "update keys set keydata = ? where uid = ?";
             my $sth_update = $dbh->prepare($sql_update);
-            $sth_update->execute or die "SQL Error: $DBI::errstr\n";
+            $sth_update->execute($default_key, $uid) or die "SQL Error: $DBI::errstr\n";
             }
 
         print "\@$uid = $name\n";
