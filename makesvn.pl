@@ -48,7 +48,7 @@ $sth = $dbh->prepare($sql);
 
 $sth->execute or die "SQL Error: $DBI::errstr\n";
 
-if ( ! -d $svnroot )
+if ( ! -d ($svnroot . '/archive') )
     {
     if ( ! mkdir($svnroot . '/archive') )
 	{
