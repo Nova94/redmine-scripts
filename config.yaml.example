@@ -5,7 +5,7 @@ svn_root: /www/svn/
 git_root: /www/git/
 logfile: /tmp/log
 errorlog: /tmp/log2
-basedir: /tmp
+gitolite_admin_path: /tmp
 default_key: /tmp/default_key
 
 gitolite:
