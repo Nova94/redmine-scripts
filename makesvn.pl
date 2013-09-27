@@ -27,7 +27,7 @@ while ( my $row = $sth->fetchrow_hashref )
     {
     my $identifier = $row->{'identifier'};
 
-    if ( system("svnadmin create --fs-type fsfs ${svnroot}/${identifier}" ) )
+    if ( system("svnadmin create --fs-type fsfs ${svnroot}${identifier}" ) )
 	{
 	print $?, "\n";
 	print "something went boom\n";
@@ -36,9 +36,9 @@ while ( my $row = $sth->fetchrow_hashref )
 	{
 	printf("Repository created: %s/%s\n", $svnroot, $identifier);
 
-	my $sth2 = $dbh->prepare("UPDATE projects set status = 'present' WHERE identifier = ?");
+    #my $sth2 = $dbh->prepare("UPDATE projects set status = 'present' WHERE identifier = ?");
 
-	$sth2->execute($identifier)  or die "SQL Error: $DBI::errstr\n";
+    #$sth2->execute($identifier)  or die "SQL Error: $DBI::errstr\n";
 	}
 
     }
