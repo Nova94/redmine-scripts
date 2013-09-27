@@ -34,7 +34,7 @@ while ( my $row = $sth->fetchrow_hashref )
 	}
     else
 	{
-	printf("Repository created: %s/%s\n", $svnroot, $identifier);
+	printf("Repository created: %s%s\n", $svnroot, $identifier);
 
     #my $sth2 = $dbh->prepare("UPDATE projects set status = 'present' WHERE identifier = ?");
 
@@ -63,7 +63,7 @@ while ( my $row = $sth->fetchrow_hashref )
 
 
     if ( rename("${svnroot}/${identifier}",
-	"${svnroot}/archive/${identifier}" ) )
+	"${svnroot}archive/${identifier}" ) )
 	{
         print "Archived respository $identifier\n";
 
