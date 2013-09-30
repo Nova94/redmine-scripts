@@ -37,10 +37,10 @@ sub assocRepository {
 
   if ( checkRepo($projectId, $identifier) == 0 and ( repoExist($root_url) == 0 ) )
   {
-    my $update_sql = "insert into repositories (url, root_url, type, project_id, identifier) VALUES (?, ?, ?, ?, ?)";
+    my $update_sql = "insert into repositories (url, root_url, type, project_id, identifier, is_default) VALUES (?, ?, ?, ?, ?, ?)";
     if (defined $projectId) {
       my $update_stmt = $dbh_redmine->prepare($update_sql);
-      $update_stmt->execute("file://" . $url, "file://" . $root_url, $repotype, $projectId, $identifier) or die "SQL Error: $DBI::errstr\n";
+      $update_stmt->execute("file://" . $url, "file://" . $root_url, $repotype, $projectId, $identifier, "1") or die "SQL Error: $DBI::errstr\n";
       log('assocRepository()', "Associated project $identifier to repo");
     }
     else {
