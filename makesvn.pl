@@ -30,7 +30,7 @@ while ( my $row = $sth->fetchrow_hashref )
     if ( system("svnadmin create --fs-type fsfs ${svnroot}${identifier}" ) )
 	{
     #This chmod is so that the projects website can access repos
-    system("chmod -R go+rX ${svnroot}${identifier}")
+    system("chmod -R go+rX ${svnroot}${identifier}");
 	print $?, "\n";
 	print "something went boom\n";
 	}
