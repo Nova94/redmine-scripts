@@ -30,7 +30,7 @@ sub assocRepository {
   my ($row) = @_;
   my $projectId  = $row->{'identifier'};
   my $requestor  = $row->{'requestor'};
-  my $identifier = getProjectId($projectId);
+  my $identifier = getIdentifier($projectId);
   my $type       = $row->{'type'};
   my $repotype   = repoToRedmine($type);
   my $url        = repopath($repotype, $projectId, $identifier, $requestor);
@@ -83,18 +83,18 @@ sub checkRepo {
 
 # FIXME: Project ID should be available in the database rather than looking it up
 # to support multiple repositories
-sub getProjectId {
-  my ($identifier) = @_;
+sub getIdentifier {
+  my ($projectId) = @_;
 
   my $dbh = connectToDb('redmine');
-  my $sql = 'select id from projects where identifier=? and id is not null';
+  my $sql = 'select name from projects where id=? and name is not null';
   my $sth = $dbh->prepare($sql);
-  $sth->execute($identifier) or die "SQL Error: $DBI::errstr\n";
+  $sth->execute($projectId) or die "SQL Error: $DBI::errstr\n";
   my $row = $sth->fetchrow_hashref;
-  my $projectId =  $row->{'id'};
+  my $identifier =  $row->{'name'};
   $sth->finish;
   $dbh->disconnect;
-  return $projectId;
+  return $identifier;
 }
 
 sub repoToRedmine {
