@@ -28,12 +28,13 @@ $dbh->disconnect;
 
 sub assocRepository {
   my ($row) = @_;
-  my $identifier = $row->{'identifier'};
-  my $projectId  = getProjectId($identifier);
+  my $projectId  = $row->{'identifier'};
+  my $requestor  = $row->{'requestor'};
+  my $identifier = getProjectId($identifier);
   my $type       = $row->{'type'};
   my $repotype   = repoToRedmine($type);
-  my $url        = repopath($repotype, $identifier);
-  my $root_url   = repopath($repotype, $identifier);
+  my $url        = repopath($repotype, $projectId, $identifier, $requestor);
+  my $root_url   = repopath($repotype, $projectId, $identifier, $requestor);
 
   if ( checkRepo($projectId, $identifier) == 0 and ( repoExist($root_url) == 0 ) )
   {
@@ -114,14 +115,14 @@ sub repoToRedmine {
 }
 
 sub repopath {
-  my ($repotype, $identifier) = @_;
+  my ($repotype, $projectId, $identifier, $requestor) = @_;
 
   given ($repotype) {
     when ('Repository::Subversion') {
-      return $config->{'svn_root'} . "$identifier";
+      return $config->{'svn_root'} . "$projectId";
     }
     when ('Repository::Git') {
-      return $config->{'git_root'} . "$identifier.git";
+      return $config->{'git_root'} . "$requestor-$identifier.git";
     }
     default {
       errorlog('repopath()', "Unsupported type $repotype");
