@@ -36,10 +36,21 @@ if ( $count_hash->{'count'} > 0 ) {
 
 $sth_count->fetchrow_hashref;
 
-
-#Do some other stuff
-system("./makesvn.pl");
+#update the gitolite keydir
 system("./sync_keys.pl " . $config->{'gitolite_admin_path'} . "/keydir");
+
+#Create git repos
+chdir $config->{'gitolite_admin_path'};
+if ( `git status` !~ /nothing to commit/ ) {
+    system("git add -A");
+    system("git commit -m \"Commit through update-gitolite.pl\"");
+    system("git push");
+}
+
+#Create svn repos
+system("./makesvn.pl");
+
+#update redmine
 system("./sync_redmine.pl");
 
 
@@ -48,12 +59,3 @@ my $sql_update = "update projects set status = 'present' where status = 'pending
 my $sth_update = $dbh->prepare($sql_update);
 $sth_update->execute or die "SQL Error: $DBI::errstr\n";
 $dbh->disconnect;
-
-
-#Commit and push changes
-chdir $config->{'gitolite_admin_path'};
-if ( `git status` !~ /nothing to commit/ ) {
-    system("git add -A");
-    system("git commit -m \"Commit through update-gitolite.pl\"");
-    system("git push");
-}
