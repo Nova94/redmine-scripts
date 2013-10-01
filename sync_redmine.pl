@@ -30,7 +30,7 @@ sub assocRepository {
   my ($row) = @_;
   my $projectId  = $row->{'identifier'};
   my $requestor  = $row->{'requestor'};
-  my $identifier = getProjectId($identifier);
+  my $identifier = getProjectId($projectId);
   my $type       = $row->{'type'};
   my $repotype   = repoToRedmine($type);
   my $url        = repopath($repotype, $projectId, $identifier, $requestor);
