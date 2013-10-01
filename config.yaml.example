@@ -7,6 +7,7 @@ logfile: /tmp/log
 errorlog: /tmp/log2
 gitolite_admin_path: /tmp
 default_key: /tmp/default_key
+redmine_scripts_path: /disk/trump/gitolite/redmine-scripts
 
 gitolite:
   host: db.example.org

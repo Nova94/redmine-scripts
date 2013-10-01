@@ -10,6 +10,9 @@ my $dbh = cat::db::connectToDb('gitolite');
 use YAML qw(LoadFile);
 my $config = LoadFile('config.yaml');
 
+#make sure we're in the correct directory
+chdir $config->{'redmine_scripts_path'};
+
 
 #Update the projects db if there are any pending projects
 my $sql_count = "select count(*) from projects where status='pending';";
@@ -36,6 +39,7 @@ if ( $count_hash->{'count'} > 0 ) {
 
 $sth_count->fetchrow_hashref;
 
+
 #update the gitolite keydir
 system("./sync_keys.pl " . $config->{'gitolite_admin_path'} . "/keydir");
 
@@ -46,6 +50,7 @@ if ( `git status` !~ /nothing to commit/ ) {
     system("git commit -m \"Commit through update-gitolite.pl\"");
     system("git push");
 }
+chdir $config->{'redmine_scripts_path'};
 
 #Create svn repos
 system("./makesvn.pl");
