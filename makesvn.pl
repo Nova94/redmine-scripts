@@ -34,8 +34,6 @@ while ( my $row = $sth->fetchrow_hashref )
 	}
     else
 	{
-    #This chmod is so that the projects website can access repos
-    system("chmod -R go+rX ${svnroot}${identifier}");
 	printf("Repository created: %s%s\n", $svnroot, $identifier);
 
     #setting the status is now handled later in update-gitolite.pl

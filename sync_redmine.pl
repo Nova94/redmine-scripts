@@ -40,6 +40,9 @@ sub assocRepository {
   {
     my $update_sql = "insert into repositories (url, root_url, type, project_id, identifier, is_default) VALUES (?, ?, ?, ?, ?, ?)";
     if (defined $projectId) {
+      #This chmod is so that the projects website can access repos
+      system("chmod -R go+rX ${svnroot}${identifier}");
+
       my $update_stmt = $dbh_redmine->prepare($update_sql);
       $update_stmt->execute("file://" . $url, "file://" . $root_url, $repotype, $projectId, $identifier, "1") or die "SQL Error: $DBI::errstr\n";
       log('assocRepository()', "Associated project $identifier to repo");
