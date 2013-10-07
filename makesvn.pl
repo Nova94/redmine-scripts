@@ -63,7 +63,7 @@ while ( my $row = $sth->fetchrow_hashref )
     my $identifier = $row->{'identifier'};
 
 
-    if ( rename("${svnroot}/${identifier}",
+    if ( rename("${svnroot}${identifier}",
 	"${svnroot}archive/${identifier}" ) )
 	{
         print "Archived respository $identifier\n";
