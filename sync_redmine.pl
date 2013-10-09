@@ -54,7 +54,20 @@ sub assocRepository {
       }
 
       my $update_stmt = $dbh_redmine->prepare($update_sql);
-      $update_stmt->execute("file://" . $url, "file://" . $root_url, $repotype, $projectId, $identifier, "1") or die "SQL Error: $DBI::errstr\n";
+      given ($type) {
+        when ('Svn') {
+          $update_stmt->execute("file://" . $url, "file://" . $root_url, $repotype, $projectId, $identifier, "1") or die "SQL Error: $DBI::errstr\n";
+        }
+        when ('Git') {
+          $update_stmt->execute($url, $root_url, $repotype, $projectId, $identifier, "1") or die "SQL Error: $DBI::errstr\n";
+        }
+        default {
+          #We should never get to this case
+          errorlog('assocRepository()', "Unsupported type $type");
+          die "Unsupported type $type in assocRepository function";
+        }
+      }
+
       log('assocRepository()', "Associated project $identifier to repo");
     }
     else {
