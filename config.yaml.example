@@ -5,9 +5,9 @@ svn_root: /www/svn/
 git_root: /www/git/
 logfile: /tmp/log
 errorlog: /tmp/log2
-gitolite_admin_path: /tmp
+gitolite_admin_path: /tmp/
 default_key: /tmp/default_key
-redmine_scripts_path: /disk/trump/gitolite/redmine-scripts
+redmine_scripts_path: ~gitolite/redmine-scripts/
 
 gitolite:
   host: db.example.org

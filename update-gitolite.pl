@@ -21,7 +21,7 @@ $sth_count->execute or die "SQL Error: $DBI::errstr\n";
 my $count_hash = $sth_count->fetchrow_hashref;
 
 if ( $count_hash->{'count'} > 0 ) {
-    system ("./gitolite-redmine.pl > " . $config->{'gitolite_admin_path'} . "/conf/projects.conf");
+    system ("./gitolite-redmine.pl > " . $config->{'gitolite_admin_path'} . "conf/projects.conf");
 }
 
 $sth_count->fetchrow_hashref;
@@ -34,14 +34,14 @@ $sth_count->execute or die "SQL Error: $DBI::errstr\n";
 $count_hash = $sth_count->fetchrow_hashref;
 
 if ( $count_hash->{'count'} > 0 ) {
-    system("./aliases.pl > " . $config->{'gitolite_admin_path'} . "/conf/aliases.pl");
+    system("./aliases.pl > " . $config->{'gitolite_admin_path'} . "conf/aliases.pl");
 }
 
 $sth_count->fetchrow_hashref;
 
 
 #update the gitolite keydir
-system("./sync_keys.pl " . $config->{'gitolite_admin_path'} . "/keydir");
+system("./sync_keys.pl " . $config->{'gitolite_admin_path'} . "keydir");
 
 #Create git repos
 chdir $config->{'gitolite_admin_path'};
