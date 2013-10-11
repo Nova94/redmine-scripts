@@ -8,6 +8,8 @@ errorlog: /tmp/log2
 gitolite_admin_path: /tmp/
 default_key: /tmp/default_key
 redmine_scripts_path: ~gitolite/redmine-scripts/
+gitolite_tmpclonedir: ~gitolite/tmpclonedir/
+git_readme: ~gitolite/git_readme
 
 gitolite:
   host: db.example.org

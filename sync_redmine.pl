@@ -40,11 +40,25 @@ sub assocRepository {
   {
     my $update_sql = "insert into repositories (url, root_url, type, project_id, identifier, is_default) VALUES (?, ?, ?, ?, ?, ?)";
     if (defined $projectId) {
-      #These chmod's are so that the projects website can access repos
       given ($type) {
         when ('Svn') {
+          # This is so that the projects website can access the repos
+          # We don't need to do this for git since that is handled by the
+          # gitolite umask option
+          system("chmod -R g+rwX $url");
         }
         when ('Git') {
+          # projects complains if the repo is empty
+          chdir $config->{'gitolite_tmpclonedir'};
+          system("git clone gitolite@localhost:$requestor-$identifer");
+          chdir $config->{'gitolite_tmpclonedir'} . $requestor . "-" . $identifier;
+          system("cp $config->{'git_readme'} .");
+          system("git add .");
+          system("git commit -m \"Initial commit\"");
+          system("git push origin master");
+          chdir $config->{'gitolite_tmpclonedir'};
+          system("rm -r $requestor-$identifier");
+          chdir $config->{'redmine_scripts_path'};
         }
         default {
           #We should never get to this case
