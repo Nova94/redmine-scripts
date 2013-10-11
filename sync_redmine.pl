@@ -50,7 +50,7 @@ sub assocRepository {
         when ('Git') {
           # projects complains if the repo is empty
           chdir $config->{'gitolite_tmpclonedir'};
-          system("git clone gitolite@localhost:$requestor-$identifer");
+          system("git clone gitolite\@localhost:$requestor-$identifier");
           chdir $config->{'gitolite_tmpclonedir'} . $requestor . "-" . $identifier;
           system("cp $config->{'git_readme'} .");
           system("git add .");
