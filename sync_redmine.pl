@@ -57,7 +57,7 @@ sub assocRepository {
           system("git commit -m \"Initial commit\"");
           system("git push origin master");
           chdir $config->{'gitolite_tmpclonedir'};
-          system("rm -r $requestor-$identifier");
+          system("rm -rf $requestor-$identifier");
           chdir $config->{'redmine_scripts_path'};
         }
         default {
