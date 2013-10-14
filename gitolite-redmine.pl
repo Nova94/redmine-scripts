@@ -43,7 +43,7 @@ sub main
 
   foreach my $project ( @{ $projects_list->{'projects'} } )
       {
-      print 'repo ' . $project->{'identifier'} . "\n";
+      print 'repo ' . $project->{'identifier'} . "\n    RW+     =   id_rsa\n";
 
       my $prefix = 'projects/' . $project->{'id'};
 
