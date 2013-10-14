@@ -34,7 +34,7 @@ $sth_count->execute or die "SQL Error: $DBI::errstr\n";
 $count_hash = $sth_count->fetchrow_hashref;
 
 if ( $count_hash->{'count'} > 0 ) {
-    system("./aliases.pl > " . $config->{'gitolite_admin_path'} . "conf/aliases.pl");
+    system("./aliases.pl > " . $config->{'gitolite_admin_path'} . "conf/aliases.conf");
 }
 
 $sth_count->fetchrow_hashref;
