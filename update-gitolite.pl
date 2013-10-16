@@ -27,6 +27,9 @@ if ( $count_hash->{'count'} > 0 ) {
 $sth_count->fetchrow_hashref;
 
 
+#Give default keys to users with no keys
+system ("./give_default.pl");
+
 #Update the keys database if there are pending keys
 $sql_count = "select count(*) from keys where state='pending';";
 $sth_count = $dbh->prepare($sql_count);
