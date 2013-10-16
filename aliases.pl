@@ -7,11 +7,6 @@ use warnings;
 use Path::Class;
 use YAML qw(LoadFile);
 
-my $config = LoadFile('config.yaml');
-my $default_key_file_path = $config->{'default_key'};
-my $default_key_file = file($default_key_file_path);
-my $default_key = $default_key_file->slurp(chomp => 1);
-
 my $dbh = cat::db::connectToDb('gitolite');
 
 
@@ -32,13 +27,6 @@ if ( $count_hash->{'count'} > 0 )
         my $uid  = $row->{'uid'};
         my $name = $row->{'name'};
         my $keydata = $row->{'keydata'};
-
-        if ($keydata !~ /ssh-rsa/ && $keydata !~ /ssh-dsa/)
-            {
-            my $sql_update = "update keys set keydata = ? where uid = ?";
-            my $sth_update = $dbh->prepare($sql_update);
-            $sth_update->execute($default_key, $uid) or die "SQL Error: $DBI::errstr\n";
-            }
 
         print "\@$uid = $name\n";
 
