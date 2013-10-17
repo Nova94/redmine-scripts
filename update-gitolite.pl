@@ -67,8 +67,8 @@ $sth_update->execute or die "SQL Error: $DBI::errstr\n";
 
 #Set git projects to be "deleted"
 #Svn projects are deleted in makesvn.pl
-my $sql_update = "update projects set status = 'deleted' where status = 'deleting' and type = 'Git'";
-my $sth_update = $dbh->prepare($sql_update);
-$sth_update->execute or die "SQL Error: $DBI::errstr\n";
+my $sql_delete = "update projects set status = 'deleted' where status = 'deleting' and type = 'Git'";
+my $sth_delete = $dbh->prepare($sql_update);
+$sth_delete->execute or die "SQL Error: $DBI::errstr\n";
 
 $dbh->disconnect;
