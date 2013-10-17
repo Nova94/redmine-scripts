@@ -15,7 +15,7 @@ chdir $config->{'redmine_scripts_path'};
 
 
 #Update the projects db if there are any pending projects
-my $sql_count = "select count(*) from projects where status='pending';";
+my $sql_count = "select count(*) from projects where status='pending' or status = 'deleting';";
 my $sth_count = $dbh->prepare($sql_count);
 $sth_count->execute or die "SQL Error: $DBI::errstr\n";
 my $count_hash = $sth_count->fetchrow_hashref;
