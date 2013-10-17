@@ -1,7 +1,5 @@
 #!/usr/bin/env perl
 
-use cat::db;
-
 use strict;
 use warnings;
 
@@ -66,4 +64,11 @@ system("./sync_redmine.pl");
 my $sql_update = "update projects set status = 'present' where status = 'pending';";
 my $sth_update = $dbh->prepare($sql_update);
 $sth_update->execute or die "SQL Error: $DBI::errstr\n";
+
+#Set git projects to be "deleted"
+#Svn projects are deleted in makesvn.pl
+my $sql_update = "update projects set status = 'deleted' where status = 'deleting' and type = 'Git'";
+my $sth_update = $dbh->prepare($sql_update);
+$sth_update->execute or die "SQL Error: $DBI::errstr\n";
+
 $dbh->disconnect;
