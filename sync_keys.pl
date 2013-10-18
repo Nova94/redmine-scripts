@@ -58,7 +58,7 @@ sub isDeleting {
     my ($row) = @_;
     my $file        = $dir->file( $row->{'name'} . '.pub' );
     print "[ $time ] DELETING: $file\n";
-    $file = $file =~ s/ /\\ /;
+    $file =~ s/ /\\ /;
     `rm $file`;
     $dbh->prepare($delSql)->execute($row->{'name'}) or die "SQL Error: $DBI::errstr\n";
 }
