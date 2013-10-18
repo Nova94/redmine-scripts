@@ -41,9 +41,9 @@ if ( $count_hash->{'count'} > 0 ) {
 
 $sth_count->fetchrow_hashref;
 
-
 #update the gitolite keydir
 system("./sync_keys.pl " . $config->{'gitolite_admin_path'} . "keydir");
+
 
 #Create git repos
 chdir $config->{'gitolite_admin_path'};
@@ -69,7 +69,7 @@ $sth_update->execute or die "SQL Error: $DBI::errstr\n";
 #Set git projects to be "deleted"
 #Svn projects are deleted in makesvn.pl
 my $sql_delete = "update projects set status = 'deleted' where status = 'deleting' and type = 'Git'";
-my $sth_delete = $dbh->prepare($sql_update);
+my $sth_delete = $dbh->prepare($sql_delete);
 $sth_delete->execute or die "SQL Error: $DBI::errstr\n";
 
 $dbh->disconnect;
