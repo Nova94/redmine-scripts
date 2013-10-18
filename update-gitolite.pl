@@ -2,6 +2,7 @@
 
 use strict;
 use warnings;
+use cat::db;
 
 #Load the database and yaml file
 my $dbh = cat::db::connectToDb('gitolite');
