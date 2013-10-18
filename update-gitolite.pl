@@ -26,6 +26,9 @@ if ( $count_hash->{'count'} > 0 ) {
 $sth_count->fetchrow_hashref;
 
 
+#delete old keys from the gitolite keydir
+system("./delete_keys.pl " . $config->{'gitolite_admin_path'} . "keydir");
+
 #Give default keys to users with no keys
 system ("./give_default.pl");
 
@@ -41,8 +44,8 @@ if ( $count_hash->{'count'} > 0 ) {
 
 $sth_count->fetchrow_hashref;
 
-#update the gitolite keydir
-system("./sync_keys.pl " . $config->{'gitolite_admin_path'} . "keydir");
+#add new keys to the gitolite keydir
+system("./add_keys.pl " . $config->{'gitolite_admin_path'} . "keydir");
 
 
 #Create git repos
