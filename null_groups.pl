@@ -32,9 +32,7 @@ while ( my $user = $users_sth->fetchrow_hashref )
   {
     if ( !(exists(${$keys}{$user->{'login'}})) )
       {
-        my $add_default_sql = "insert into keys (uid, keydata, name, state) values (?,?,?,'pending')";
-        my $add_default_sth = $dbh_gitolite->prepare($add_default_sql);
-        $add_default_sth->execute($user->{'login'}, $default_key, $user->{'login'} . "-default") or die "SQL error: $DBI::errstr\n";
+        print "\@$user->{'login'} = NULL\n";
       }
   }
 

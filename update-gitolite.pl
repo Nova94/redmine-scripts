@@ -29,9 +29,6 @@ $sth_count->fetchrow_hashref;
 #delete old keys from the gitolite keydir
 system("./delete_keys.pl " . $config->{'gitolite_admin_path'} . "keydir");
 
-#Give default keys to users with no keys
-system ("./give_default.pl");
-
 #Update the keys database if there are pending keys
 $sql_count = "select count(*) from keys where state='pending';";
 $sth_count = $dbh->prepare($sql_count);
@@ -43,6 +40,9 @@ if ( $count_hash->{'count'} > 0 ) {
 }
 
 $sth_count->fetchrow_hashref;
+
+#Create user groups for users with no keys
+system ("./null_groups.pl > " . $config->{'gitolite_admin_path'} . "conf/nokeys.conf");
 
 #add new keys to the gitolite keydir
 system("./add_keys.pl " . $config->{'gitolite_admin_path'} . "keydir");
