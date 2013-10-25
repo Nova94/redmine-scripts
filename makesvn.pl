@@ -21,24 +21,30 @@ my $dbh = cat::db::connectToDb('gitolite');
 my $sql = "select * from projects where status = 'pending' AND type = 'Svn'";
 my $sth = $dbh->prepare($sql);
 
+my $dbh_redmine = cat::db::connectToDb('redmine');
+my $sql_redmine = "select * from projects where id = ?";
+my $sth_redmine = $dbh_redmine->prepare($sql_redmine);
+
 $sth->execute or die "SQL Error: $DBI::errstr\n";
 
 while ( my $row = $sth->fetchrow_hashref )
     {
-    my $identifier = $row->{'identifier'};
+    $sth_redmine->execute($row->{'identifier'});
+    my $identifier = $sth_redmine->fetchrow_hashref->{'identifier'};
 
-    if ( system("svnadmin create --fs-type fsfs ${svnroot}/${identifier}" ) )
+    if ( system("svnadmin create --fs-type fsfs ${svnroot}${identifier}" ) )
 	{
 	print $?, "\n";
 	print "something went boom\n";
 	}
     else
 	{
-	printf("Repository created: %s/%s\n", $svnroot, $identifier);
+	printf("Repository created: %s%s\n", $svnroot, $identifier);
 
-	my $sth2 = $dbh->prepare("UPDATE projects set status = 'present' WHERE identifier = ?");
+    #setting the status is now handled later in update-gitolite.pl
+    #my $sth2 = $dbh->prepare("UPDATE projects set status = 'present' WHERE identifier = ?");
 
-	$sth2->execute($identifier)  or die "SQL Error: $DBI::errstr\n";
+    #$sth2->execute($identifier)  or die "SQL Error: $DBI::errstr\n";
 	}
 
     }
@@ -48,7 +54,7 @@ $sth = $dbh->prepare($sql);
 
 $sth->execute or die "SQL Error: $DBI::errstr\n";
 
-if ( ! -d $svnroot )
+if ( ! -d ($svnroot . '/archive') )
     {
     if ( ! mkdir($svnroot . '/archive') )
 	{
@@ -59,11 +65,12 @@ if ( ! -d $svnroot )
 
 while ( my $row = $sth->fetchrow_hashref )
     {
-    my $identifier = $row->{'identifier'};
+    $sth_redmine->execute($row->{'identifier'});
+    my $identifier = $sth_redmine->fetchrow_hashref->{'identifier'};
 
 
-    if ( rename("${svnroot}/${identifier}",
-	"${svnroot}/archive/${identifier}" ) )
+    if ( rename("${svnroot}${identifier}",
+	"${svnroot}archive/${identifier}" ) )
 	{
         print "Archived respository $identifier\n";
 

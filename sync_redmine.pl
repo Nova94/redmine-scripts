@@ -28,19 +28,60 @@ $dbh->disconnect;
 
 sub assocRepository {
   my ($row) = @_;
-  my $identifier = $row->{'identifier'};
-  my $projectId  = getProjectId($identifier);
+  my $projectId  = $row->{'identifier'};
+  my $requestor  = $row->{'requestor'};
+  my $identifier = getIdentifier($projectId);
   my $type       = $row->{'type'};
   my $repotype   = repoToRedmine($type);
-  my $url        = repopath($repotype, $identifier);
-  my $root_url   = repopath($repotype, $identifier);
+  my $url        = repopath($repotype, $projectId, $identifier, $requestor);
+  my $root_url   = repopath($repotype, $projectId, $identifier, $requestor);
 
   if ( checkRepo($projectId, $identifier) == 0 and ( repoExist($root_url) == 0 ) )
   {
-    my $update_sql = "insert into repositories (url, root_url, type, project_id, identifier) VALUES (?, ?, ?, ?, ?)";
+    my $update_sql = "insert into repositories (url, root_url, type, project_id, identifier, is_default) VALUES (?, ?, ?, ?, ?, ?)";
     if (defined $projectId) {
+      given ($type) {
+        when ('Svn') {
+          # This is so that the projects website can access the repos
+          # We don't need to do this for git since that is handled by the
+          # gitolite umask option
+          system("chmod -R g+rwX $url");
+        }
+        when ('Git') {
+          # projects complains if the repo is empty
+          chdir $config->{'gitolite_tmpclonedir'};
+          system("git clone gitolite\@localhost:$requestor-$identifier");
+          chdir $config->{'gitolite_tmpclonedir'} . $requestor . "-" . $identifier;
+          system("cp $config->{'git_readme'} .");
+          system("git add .");
+          system("git commit -m \"Initial commit\"");
+          system("git push origin master");
+          chdir $config->{'gitolite_tmpclonedir'};
+          system("rm -rf $requestor-$identifier");
+          chdir $config->{'redmine_scripts_path'};
+        }
+        default {
+          #We should never get to this case
+          errorlog('assocRepository()', "Unsupported type $type");
+          die "Unsupported type $type in assocRepository function";
+        }
+      }
+
       my $update_stmt = $dbh_redmine->prepare($update_sql);
-      $update_stmt->execute($url, $root_url, $repotype, $projectId, $identifier) or die "SQL Error: $DBI::errstr\n";
+      given ($type) {
+        when ('Svn') {
+          $update_stmt->execute("file://" . $url, "file://" . $root_url, $repotype, $projectId, $identifier, "1") or die "SQL Error: $DBI::errstr\n";
+        }
+        when ('Git') {
+          $update_stmt->execute($url, $root_url, $repotype, $projectId, $identifier, "1") or die "SQL Error: $DBI::errstr\n";
+        }
+        default {
+          #We should never get to this case
+          errorlog('assocRepository()', "Unsupported type $type");
+          die "Unsupported type $type in assocRepository function";
+        }
+      }
+
       log('assocRepository()', "Associated project $identifier to repo");
     }
     else {
@@ -82,18 +123,18 @@ sub checkRepo {
 
 # FIXME: Project ID should be available in the database rather than looking it up
 # to support multiple repositories
-sub getProjectId {
-  my ($identifier) = @_;
+sub getIdentifier {
+  my ($projectId) = @_;
 
   my $dbh = connectToDb('redmine');
-  my $sql = 'select id from projects where identifier=? and id is not null';
+  my $sql = 'select name from projects where id=? and name is not null';
   my $sth = $dbh->prepare($sql);
-  $sth->execute($identifier) or die "SQL Error: $DBI::errstr\n";
+  $sth->execute($projectId) or die "SQL Error: $DBI::errstr\n";
   my $row = $sth->fetchrow_hashref;
-  my $projectId =  $row->{'id'};
+  my $identifier =  $row->{'name'};
   $sth->finish;
   $dbh->disconnect;
-  return $projectId;
+  return $identifier;
 }
 
 sub repoToRedmine {
@@ -114,14 +155,14 @@ sub repoToRedmine {
 }
 
 sub repopath {
-  my ($repotype, $identifier) = @_;
+  my ($repotype, $projectId, $identifier, $requestor) = @_;
 
   given ($repotype) {
     when ('Repository::Subversion') {
-      return $config->{'svn_root'} . "$identifier";
+      return $config->{'svn_root'} . "$requestor-$identifier";
     }
     when ('Repository::Git') {
-      return $config->{'git_root'} . "$identifier.git";
+      return $config->{'git_root'} . "$requestor-$identifier.git";
     }
     default {
       errorlog('repopath()', "Unsupported type $repotype");

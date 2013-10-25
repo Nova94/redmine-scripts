@@ -43,7 +43,7 @@ sub main
 
   foreach my $project ( @{ $projects_list->{'projects'} } )
       {
-      print 'repo ' . $project->{'identifier'} . "\n";
+      print 'repo ' . $project->{'identifier'} . "\n    RW+     =   id_rsa\n";
 
       my $prefix = 'projects/' . $project->{'id'};
 
@@ -143,27 +143,27 @@ sub each_member
             {
                 when ('Manager')
                 {
-                    print 'RW+     =   ';
+                    print 'RW+     =   @';
                 }
                 when ('Developer')
                 {
-                    print 'RW+     =   ';
+                    print 'RW+     =   @';
                 }
                 when ('Reporter')
                 {
-                    print 'R       =   ';
+                    print 'R       =   @';
                 }
                 when ('Watcher')
                 {
-                    print 'R       =   ';
+                    print 'R       =   @';
                 }
                 when ('Editor')
                 {
-                    print 'RW+     =   ';
+                    print 'RW+     =   @';
                 }
                 when ('Viewer')
                 {
-                    print 'R       =   ';
+                    print 'R       =   @';
                 }
                 default
                 {
