@@ -35,8 +35,6 @@ sub assocRepository {
   my $repotype   = repoToRedmine($type);
   my $url        = repopath($repotype, $projectId, $identifier, $requestor);
   my $root_url   = repopath($repotype, $projectId, $identifier, $requestor);
-  print $url . "\n";
-  exit(0);
 
   if ( checkRepo($projectId, $identifier) == 0 and ( repoExist($root_url) == 0 ) )
   {
