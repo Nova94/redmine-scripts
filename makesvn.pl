@@ -21,11 +21,16 @@ my $dbh = cat::db::connectToDb('gitolite');
 my $sql = "select * from projects where status = 'pending' AND type = 'Svn'";
 my $sth = $dbh->prepare($sql);
 
+my $dbh_redmine = cat::db::connectToDb('redmine');
+my $sql_redmine = "select * from projects where id = ?";
+my $sth_redmine = $dbh_redmine->prepare($sql_redmine);
+
 $sth->execute or die "SQL Error: $DBI::errstr\n";
 
 while ( my $row = $sth->fetchrow_hashref )
     {
-    my $identifier = $row->{'identifier'};
+    $sth_redmine->execute($row->{'identifier'});
+    my $identifier = $sth_redmine->fetchrow_hashref->{'identifier'};
 
     if ( system("svnadmin create --fs-type fsfs ${svnroot}${identifier}" ) )
 	{
