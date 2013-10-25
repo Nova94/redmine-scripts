@@ -65,7 +65,8 @@ if ( ! -d ($svnroot . '/archive') )
 
 while ( my $row = $sth->fetchrow_hashref )
     {
-    my $identifier = $row->{'identifier'};
+    $sth_redmine->execute($row->{'identifier'});
+    my $identifier = $sth_redmine->fetchrow_hashref->{'identifier'};
 
 
     if ( rename("${svnroot}${identifier}",
