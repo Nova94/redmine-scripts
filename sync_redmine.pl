@@ -35,6 +35,8 @@ sub assocRepository {
   my $repotype   = repoToRedmine($type);
   my $url        = repopath($repotype, $projectId, $identifier, $requestor);
   my $root_url   = repopath($repotype, $projectId, $identifier, $requestor);
+  print $url . "\n";
+  exit(0);
 
   if ( checkRepo($projectId, $identifier) == 0 and ( repoExist($root_url) == 0 ) )
   {
@@ -159,7 +161,7 @@ sub repopath {
 
   given ($repotype) {
     when ('Repository::Subversion') {
-      return $config->{'svn_root'} . "$projectId";
+      return $config->{'svn_root'} . "$requestor-$identifier";
     }
     when ('Repository::Git') {
       return $config->{'git_root'} . "$requestor-$identifier.git";
