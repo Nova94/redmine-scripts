@@ -28,13 +28,15 @@ $dbh->disconnect;
 
 sub assocRepository {
   my ($row) = @_;
+  # the redmine's project_id is the same as the gitolite identifier
   my $projectId  = $row->{'identifier'};
   my $requestor  = $row->{'requestor'};
-  my $identifier = getIdentifier($projectId);
+  # the redmine's identifier is the same as the gitolite name
+  my $identifier = $row->{'name'};
   my $type       = $row->{'type'};
   my $repotype   = repoToRedmine($type);
-  my $url        = repopath($repotype, $projectId, $identifier, $requestor);
-  my $root_url   = repopath($repotype, $projectId, $identifier, $requestor);
+  my $url        = repopath($repotype, $identifier, $requestor);
+  my $root_url   = repopath($repotype, $identifier, $requestor);
 
   if ( checkRepo($projectId, $identifier) == 0 and ( repoExist($root_url) == 0 ) )
   {
@@ -121,8 +123,7 @@ sub checkRepo {
   }
 }
 
-# FIXME: Project ID should be available in the database rather than looking it up
-# to support multiple repositories
+# NOTE: This is currently not used, so it probably is not be up to date
 sub getIdentifier {
   my ($projectId) = @_;
 
@@ -155,7 +156,7 @@ sub repoToRedmine {
 }
 
 sub repopath {
-  my ($repotype, $projectId, $identifier, $requestor) = @_;
+  my ($repotype, $identifier, $requestor) = @_;
 
   given ($repotype) {
     when ('Repository::Subversion') {
