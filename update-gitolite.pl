@@ -57,7 +57,7 @@ if ( `git status` !~ /nothing to commit/ ) {
 }
 chdir $config->{'redmine_scripts_path'};
 
-#Create svn repos
+#Create and archive svn repos
 system("./makesvn.pl");
 
 #update redmine
@@ -69,10 +69,7 @@ my $sql_update = "update projects set status = 'present' where status = 'pending
 my $sth_update = $dbh->prepare($sql_update);
 $sth_update->execute or die "SQL Error: $DBI::errstr\n";
 
-#Set git projects to be "deleted"
-#Svn projects are deleted in makesvn.pl
-my $sql_delete = "update projects set status = 'deleted' where status = 'deleting' and type = 'Git'";
-my $sth_delete = $dbh->prepare($sql_delete);
-$sth_delete->execute or die "SQL Error: $DBI::errstr\n";
+#Archive git repos
+system("./archive_git.pl");
 
 $dbh->disconnect;
