@@ -1,0 +1,17 @@
+Hi $requestor,
+ 
+The git repo for your Redmine project $name has been created.
+ 
+For git, project members with either the Manager or Developer role can check out and commit to the repository using one of two methods.
+ 
+Method 1: https access
+Clone using
+`git clone https://projects.cecs.pdx.edu/git/$requestor-$name`
+You will be asked for your MCECS username and password.
+ 
+Method 2: ssh key access
+Go to My Account and select the "Public Keys" tab. Here you can add ssh public keys for repository access. Once added, you can checkout the repository using
+`git clone git@projects.cecs.pdx.edu:$requestor-$name.git`
+If your ssh key is loaded, you will not need to supply a username or password.
+ 
+Please let the CAT know if you have any additional questions.

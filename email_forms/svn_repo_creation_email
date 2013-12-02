@@ -1,0 +1,11 @@
+Hi $requestor,
+ 
+The svn repo for your Redmine project $name has been created.
+ 
+For subversion, project members with either the Manager or Developer role can check out and commit to the repository using https.
+     
+    Checkout using
+    `svn checkout https://projects.cecs.pdx.edu/svn/$requestor-$name`
+    You will be asked for your MCECS username and password.
+     
+Please let the CAT know if you have any additional questions.

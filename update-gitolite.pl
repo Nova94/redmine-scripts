@@ -63,6 +63,8 @@ system("./makesvn.pl");
 #update redmine
 system("./sync_redmine.pl");
 
+#email users their repos have been created
+system("./email_users.pl");
 
 #Set any pending projects to present
 my $sql_update = "update projects set status = 'present' where status = 'pending';";
