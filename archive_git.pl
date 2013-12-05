@@ -70,7 +70,7 @@ sub email
 
     my $sendmail = '/usr/sbin/sendmail -t';
     my $from = "From: redmine\@cecs.pdx.edu\n";
-    my $subject = "Subject: The git repo for your redmine project $name has been deleted\n";
+    my $subject = "Subject: $name\'s git repo has been deleted\n";
     my $send_to = "To: $requestor\@cecs.pdx.edu\n";
 
     open(SENDMAIL, "|$sendmail") or die "Cannot open $sendmail";
