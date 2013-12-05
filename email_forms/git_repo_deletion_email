@@ -1,0 +1,5 @@
+Hi $requestor,
+ 
+The git repo for your Redmine project $name has been deleted.
+ 
+If you did not delete the repo or if deleting the repo was a mistake, please email support@cat.pdx.edu

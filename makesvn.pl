@@ -69,6 +69,8 @@ while ( my $row = $sth->fetchrow_hashref )
 	{
         print "Archived respository $requestor-$name\n";
 
+    email($row);
+
     my $identifier = $row->{'identifier'};
 	my $sth2 = $dbh->prepare("UPDATE projects set status = 'deleted' WHERE identifier = ?");
 
@@ -80,6 +82,31 @@ while ( my $row = $sth->fetchrow_hashref )
 	}
     }
 
+sub email 
+    {
+    my ($row) = @_;
+
+    my $requestor = $row->{'requestor'};
+    my $name = $row->{'name'};
+
+    open(FILE, 'email_forms/svn_repo_deletion_email') or die "Cannot read repo deletion email file\n";
+    local $/;
+    my $message = <FILE>;
+    $message =~ s/(\$\w+)/$1/eeg;
+
+    my $sendmail = '/usr/sbin/sendmail -t';
+    my $from = "From: redmine\@cecs.pdx.edu\n";
+    my $subject = "Subject: The svn repo for your redmine project $name has been deleted\n";
+    my $send_to = "To: $requestor\@cecs.pdx.edu\n";
+
+    open(SENDMAIL, "|$sendmail") or die "Cannot open $sendmail";
+    print SENDMAIL $from;
+    print SENDMAIL $subject;
+    print SENDMAIL $send_to;
+    print SENDMAIL "Content-type: text/plain\n\n";
+    print SENDMAIL $message;
+    close(SENDMAIL);
+    }
 
 
 $dbh->disconnect
