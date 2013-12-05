@@ -51,7 +51,7 @@ sub email {
     my $uid = $row->{'uid'};
     my $name = $row->{'name'};
 
-    open(FILE, 'email_forms/key_creation_email') or die "Cannot read key deletion email file\n";
+    open(FILE, 'email_forms/key_creation_email') or die "Cannot read key creation email file\n";
     local $/;
     my $message = <FILE>;
     $message =~ s/(\$\w+)/$1/eeg;
