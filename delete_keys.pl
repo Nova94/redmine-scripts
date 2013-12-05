@@ -38,5 +38,33 @@ sub isDeleting {
     print "[ $time ] DELETING: $file\n";
     $file =~ s/ /\\ /;
     `rm $file`;
+    
+    email($row);
+
     $dbh->prepare($delSql)->execute($row->{'name'}) or die "SQL Error: $DBI::errstr\n";
+}
+
+sub email {
+    my ($row) = @_;
+
+    my $uid = $row->{'uid'};
+    my $name = $row->{'name'};
+
+    open(FILE, 'email_forms/key_deletion_email') or die "Cannot read key deletion email file\n";
+    local $/;
+    my $message = <FILE>;
+    $message =~ s/(\$\w+)/$1/eeg;
+
+    my $sendmail = '/usr/sbin/sendmail -t';
+    my $from = "From: redmine\@cecs.pdx.edu\n";
+    my $subject = "Subject: Your ssh key $name has been removed from your redmine account\n";
+    my $send_to = "To: $uid\@cecs.pdx.edu\n";
+
+    open(SENDMAIL, "|$sendmail") or die "Cannot open $sendmail";
+    print SENDMAIL $from;
+    print SENDMAIL $subject;
+    print SENDMAIL $send_to;
+    print SENDMAIL "Content-type: text/plain\n\n";
+    print SENDMAIL $message;
+    close(SENDMAIL);
 }
