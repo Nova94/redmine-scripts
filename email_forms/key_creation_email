@@ -1,0 +1,7 @@
+Hi $uid,
+
+The ssh key $name has been added to your Redmine account.
+
+If you did not create this key, you can remove it here:
+
+https://intranet.cecs.pdx.edu/dev/cohoep/projects/keys/

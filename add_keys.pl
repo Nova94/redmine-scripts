@@ -39,5 +39,33 @@ sub isPending {
     my $file_handle = $file->openw();
     print "[ $time ] CREATING: $file\n";
     $file_handle->print( $row->{'keydata'} . "\n" );
+
+    email($row);
+
     $dbh->prepare($statePen)->execute($row->{'name'}) or die "SQL Error: $DBI::errstr\n";
+}
+
+sub email {
+    my ($row) = @_;
+
+    my $uid = $row->{'uid'};
+    my $name = $row->{'name'};
+
+    open(FILE, 'email_forms/key_creation_email') or die "Cannot read key deletion email file\n";
+    local $/;
+    my $message = <FILE>;
+    $message =~ s/(\$\w+)/$1/eeg;
+
+    my $sendmail = '/usr/sbin/sendmail -t';
+    my $from = "From: redmine\@cecs.pdx.edu\n";
+    my $subject = "Subject: Your ssh key $name has been added to your redmine account\n";
+    my $send_to = "To: $uid\@cecs.pdx.edu\n";
+
+    open(SENDMAIL, "|$sendmail") or die "Cannot open $sendmail";
+    print SENDMAIL $from;
+    print SENDMAIL $subject;
+    print SENDMAIL $send_to;
+    print SENDMAIL "Content-type: text/plain\n\n";
+    print SENDMAIL $message;
+    close(SENDMAIL);
 }
