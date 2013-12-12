@@ -167,6 +167,7 @@ sub each_member
                 }
                 default
                 {
+                  next;
                 }
             }
 
