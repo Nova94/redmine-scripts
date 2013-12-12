@@ -51,7 +51,13 @@ sub email {
     my $uid = $row->{'uid'};
     my $name = $row->{'name'};
 
-    open(FILE, 'email_forms/key_creation_email') or die "Cannot read key creation email file\n";
+    # sponsered users get a different email message
+    if ($uid =~ /.*@.*/) {
+        open(FILE, 'email_forms/sponsored_key_creation_email') or die "Cannot read key creation email file\n";
+    }
+    else {
+        open(FILE, 'email_forms/key_creation_email') or die "Cannot read key creation email file\n";
+    }
     local $/;
     my $message = <FILE>;
     $message =~ s/(\$\w+)/$1/eeg;
@@ -59,7 +65,17 @@ sub email {
     my $sendmail = '/usr/sbin/sendmail -t';
     my $from = "From: redmine\@cecs.pdx.edu\n";
     my $subject = "Subject: Your ssh key $name has been added to your redmine account\n";
-    my $send_to = "To: $uid\@cecs.pdx.edu\n";
+    my $send_to = "";
+
+    # Check if the user is a sponsored user to know what email to send to
+    if ($uid =~ /.*@.*/) {
+        # User is sponsored
+        $send_to = "To: $uid\n";
+    }
+    else {
+        # User is not sponsored: Send to cecs email
+        $send_to = "To: $uid\@cecs.pdx.edu\n";
+    }
 
     open(SENDMAIL, "|$sendmail") or die "Cannot open $sendmail";
     print SENDMAIL $from;

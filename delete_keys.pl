@@ -58,7 +58,17 @@ sub email {
     my $sendmail = '/usr/sbin/sendmail -t';
     my $from = "From: redmine\@cecs.pdx.edu\n";
     my $subject = "Subject: Your ssh key $name has been removed from your redmine account\n";
-    my $send_to = "To: $uid\@cecs.pdx.edu\n";
+    my $send_to = "";
+
+    # Check if the user is a sponsored user to know what email to send to
+    if ($uid =~ /.*@.*/) {
+        # User is sponsored
+        $send_to = "To: $uid\n";
+    }
+    else {
+        # User is not sponsored: Send to cecs email
+        $send_to = "To: $uid\@cecs.pdx.edu\n";
+    }
 
     open(SENDMAIL, "|$sendmail") or die "Cannot open $sendmail";
     print SENDMAIL $from;
