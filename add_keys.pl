@@ -53,10 +53,10 @@ sub email {
 
     # sponsered users get a different email message
     if ($uid =~ /.*@.*/) {
-        open(FILE, 'email_forms/sponsored_key_creation_email') or die "Cannot read key creation email file\n";
+        open(FILE, '$emaildir/sponsored_key_creation_email') or die "Cannot read key creation email file\n";
     }
     else {
-        open(FILE, 'email_forms/key_creation_email') or die "Cannot read key creation email file\n";
+        open(FILE, '$emaildir/key_creation_email') or die "Cannot read key creation email file\n";
     }
     local $/;
     my $message = <FILE>;

@@ -4,4 +4,4 @@ The ssh key $name has been added to your Redmine account.
 
 If you did not create this key, you can remove it here:
 
-$web_url/projects/keys/
+$intranet_keys_url

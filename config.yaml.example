@@ -1,8 +1,8 @@
 # redmine api
 api_key: 5029e19bced91284bcdefff3918405bcdef91830
-redmine_url: https://projects.cecs.pdx.edu/git/$requestor-$name
-intranet_keys_url: https://intranet.cecs.pdx.edu/dev/cohoep/projects/keys/
-git_url:  git@projects.cecs.pdx.edu:$requestor-$name.git
+redmine_url: https://projects.cecs.pdx.edu
+intranet_keys_url: https://intranet.cecs.pdx.edu/projects/keys/
+git_url:  git@projects.cecs.pdx.edu
 svn_root: /www/svn/
 git_root: /www/git/
 logfile: /tmp/log

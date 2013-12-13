@@ -63,7 +63,7 @@ sub email
     my $requestor = $row->{'requestor'};
     my $name = $row->{'name'};
 
-    open(FILE, 'email_forms/git_repo_deletion_email') or die "Cannot read repo deletion email file\n";
+    open(FILE, '$emaildir/git_repo_deletion_email') or die "Cannot read repo deletion email file\n";
     local $/;
     my $message = <FILE>;
     $message =~ s/(\$\w+)/$1/eeg;

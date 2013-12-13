@@ -22,13 +22,13 @@ while ( my $row = $sth_query->fetchrow_hashref )
 
     if ($type eq "Git")
         {
-        open(FILE, 'email_forms/git_repo_creation_email') or die "Can't read email file\n";
+        open(FILE, '$emaildir/git_repo_creation_email') or die "Can't read email file\n";
         local $/;
         $message = <FILE>;
         }
     elsif ($type eq "Svn")
         {
-        open(FILE, 'email_forms/svn_repo_creation_email') or die "Can't read email file\n";
+        open(FILE, '$emaildir/svn_repo_creation_email') or die "Can't read email file\n";
         local $/;
         $message = <FILE>;
         }
