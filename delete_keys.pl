@@ -7,11 +7,11 @@ use strict;
 use warnings;
 use Switch;
 use cat::db;
-
+use YAML qw(LoadFile);
 use Path::Class;
 use Data::Dumper;
 
-
+my $config = LoadFile('config.yaml');
 my $dbh = cat::db::connectToDb('gitolite');
 my $sql       = 'SELECT * FROM keys WHERE state=?';
 my $delSql    = 'DELETE FROM keys WHERE name=?';
@@ -49,8 +49,9 @@ sub email {
 
     my $uid = $row->{'uid'};
     my $name = $row->{'name'};
+    my $emaildir = $config->{'emaildir'};
 
-    open(FILE, '$emaildir/key_deletion_email') or die "Cannot read key deletion email file\n";
+    open(FILE, "$emaildir/key_deletion_email") or die "Cannot read key deletion email file\n";
     local $/;
     my $message = <FILE>;
     $message =~ s/(\$\w+)/$1/eeg;

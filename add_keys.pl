@@ -8,11 +8,11 @@ use strict;
 use warnings;
 use Switch;
 use cat::db;
-
+use YAML qw(LoadFile);
 use Path::Class;
 use Data::Dumper;
 
-
+my $config = LoadFile('config.yaml');
 my $dbh = cat::db::connectToDb('gitolite');
 my $sql       = 'SELECT * FROM keys WHERE state=?';
 my $statePen  = 'UPDATE keys SET state=\'present\' WHERE name=?';
@@ -50,13 +50,15 @@ sub email {
 
     my $uid = $row->{'uid'};
     my $name = $row->{'name'};
+    my $emaildir = $config->{'emaildir'};
+    my $intranet_keys_url = $config->{'intranet_keys_url'};
 
     # sponsered users get a different email message
     if ($uid =~ /.*@.*/) {
-        open(FILE, '$emaildir/sponsored_key_creation_email') or die "Cannot read key creation email file\n";
+        open(FILE, "$emaildir/sponsored_key_creation_email") or die "Cannot read key creation email file\n";
     }
     else {
-        open(FILE, '$emaildir/key_creation_email') or die "Cannot read key creation email file\n";
+        open(FILE, "$emaildir/key_creation_email") or die "Cannot read key creation email file\n";
     }
     local $/;
     my $message = <FILE>;

@@ -19,16 +19,19 @@ while ( my $row = $sth_query->fetchrow_hashref )
     my $requestor = $row->{'requestor'};
     my $name = $row->{'name'};
     my $message;
+    my $emaildir = $config->{'emaildir'};
+    my $redmine_url = $config->{'redmine_url'};
+    my $git_url = $config->{'git_url'};
 
     if ($type eq "Git")
         {
-        open(FILE, '$emaildir/git_repo_creation_email') or die "Can't read email file\n";
+        open(FILE, "$emaildir/git_repo_creation_email") or die "Can't read email file\n";
         local $/;
         $message = <FILE>;
         }
     elsif ($type eq "Svn")
         {
-        open(FILE, '$emaildir/svn_repo_creation_email') or die "Can't read email file\n";
+        open(FILE, "$emaildir/svn_repo_creation_email") or die "Can't read email file\n";
         local $/;
         $message = <FILE>;
         }
